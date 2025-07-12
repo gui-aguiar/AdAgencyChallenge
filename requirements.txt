@@ -1,0 +1,13 @@
+Django>=4.2,<5.0
+celery>=5.3,<6.0
+django-celery-beat>=2.5
+pytest>=7.4
+pytest-django>=4.5
+pytest-celery>=0.0.0a5
+faker
+mypy
+django-stubs>=4.2
+types-python-dateutil
+types-pytz
+pytz
+python-dateutil

@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  web_server:
+    build: .
+    container_name: django_web_server
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - rabbitmq
+
+  worker:
+    build: .
+    container_name: celery_worker
+    command: celery -A AdAgency worker --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - rabbitmq
+      - web_server
+
+  beat:
+    build: .
+    container_name: celery_beat
+    command: celery -A AdAgency beat --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - rabbitmq
+      - web_server
+
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
